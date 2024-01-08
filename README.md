@@ -1,5 +1,5 @@
 # Partial Differential Equations 3 (SCEE09004)
-This repository contains Jupyter workbooks for the Partial Differential Equations 3 course.  The workbooks cover the **numerical methods** half of the course and use finite difference methods for the solution of eliptic, parabolic and hyperbolic differential equations.  All of these workbooks make use of the <code>matplotlib</code>, <code>numpy</code> and <code>scipy</code> python libraries.
+This repository contains Jupyter workbooks for the Partial Differential Equations 3 course.  The workbooks cover the **numerical methods** half of the course and use finite difference methods for the solution of elliptic, parabolic and hyperbolic differential equations.  All of these workbooks make use of the <code>matplotlib</code>, <code>numpy</code> and <code>scipy</code> python libraries.
 
 Each workbook covers a different topic from the course.  Many of them make use of the <code>refinement_analysis.py</code> module which must be in the same folder as the workbook so it can be found by the python import:
 
