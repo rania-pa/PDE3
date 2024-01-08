@@ -27,4 +27,4 @@ The Laboratories folder includes a Jupyter workbook for each of the Laboratories
 The laboratory folder also contains a folder of scripts and another of figures.  These are needed for the solutions to be available (when released) and for the figures in some of the worksheets.  The folder also contains a copy of the <code>refinement_analysis.py</code> script which is needed for some of the laboratories.
 
 ## Coursework
-The coursework folder contains Jupyter notebooks needed for the coursework assignments. 
+The coursework folder (when becomes available) will contain Jupyter notebooks needed for the coursework assignments. 
