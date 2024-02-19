@@ -1,0 +1,163 @@
+###W08_ex1_parte_start_md
+* at $t=0.5$ the position of the square wave and the Gaussian bump are reversed as expected.
+* at $t=1.0$ the waves are superimposed in the correct position, the square wave has been rounded off a little and is wider at the base than expected.
+* at $t=10.0$ the wave positions are a little to the right of their expected location (this _phase error_ is caused by higher order terms in the trunction error), furthermore the Gaussian wave has spread and lost amplitude (a dissipation error) and the square wave is very rounded.
+* By $t=50.0$ the waves have dispersed significantly and the phase error is more noticeable.  At this time the waves have lost more than 20\% of amplitude and both look much more sinusoidal than their original shape.  The solution at this time needs a much finer grid if the FOU scheme is to be used.
+###W08_ex1_parte_end
+
+###W08_ex2_parta_start_py
+# Write the Lax-Friedrichs scheme
+def LaxFriedrichs(u,dx,dt):
+    '''Classical Lax-Friedrichs scheme'''
+    u = (np.roll(u,+1)+np.roll(u,-1))/2 - \
+      AdvectionSpeed*dt/(2*dx) * (np.roll(u,+1)-np.roll(u,-1))
+    return u, 'Lax-Friedrichs'
+
+'''Main Program'''
+# set up the grid and the initial conditions
+N = 500 # Number of grid points 
+dx,x = GridGen(N)
+u = InitialConditions(x)
+u0 = u.copy()
+
+# call the solver for 1 second using the Lax-Friedrichs scheme
+tOut = 1.0    # Change this variable to obtain results for t = 10.0 and t = 50.0 seconds
+u, scheme = OneDSolver(tOut, u, dx, LaxFriedrichs)
+
+# Plot the results
+fig = plt.figure()
+
+# Plot exact solution
+plt.plot(x,u0,'-r')
+
+# Plot numerical solution
+plt.plot(x,u,'-b')
+
+plt.title('Linear advection {} scheme, N={}, t={}'.format(scheme,N,tOut))
+plt.show()
+###W08_ex2_parta_switch_md
+* at $t=1.0$ the waves are superimposed in the correct position, the square wave has been rounded off a little and is wider at the base than expected, it also appears to have a jagged edge.
+* at $t=10.0$ the wave positions are a little to the right of their expected location (_phase error_ once again), furthermore the Gaussian wave has spread and lost amplitude (a dissipation error) and the square wave is very rounded.
+* By $t=50.0$ the waves have dispersed significantly and the phase error is more noticeable.  At this time the waves have lost more than 40\% of amplitude and both look much more sinusoidal than their original shape.  The solution at this time needs a is worse than that obtained with the FOU scheme.
+###W08_ex2_parta_end
+
+###W08_ex2_partb_start_py
+# Write the Lax-Friedrichs scheme
+def LaxFriedrichs(u,dx,dt):
+    '''Classical Lax-Friedrichs scheme'''
+    u = (np.roll(u,+1)+np.roll(u,-1))/2 - \
+      AdvectionSpeed*dt/(2*dx) * (np.roll(u,+1)-np.roll(u,-1))
+    return u, 'Lax-Friedrichs'
+
+'''Main Program'''
+# set up the grid and the initial conditions
+N = 50 # Number of grid points 
+dx,x = GridGen(N)
+u = InitialConditions(x)
+u0 = u.copy()
+
+# call the solver for 1 second using the Lax-Friedrichs scheme
+tOut = 1.0    # Change this variable to obtain results for t = 10.0 and t = 50.0 seconds
+u, scheme = OneDSolver(tOut, u, dx, LaxFriedrichs)
+
+# Plot the results
+fig = plt.figure()
+
+# Plot exact solution
+plt.plot(x,u0,'-r')
+
+# Plot numerical solution
+plt.plot(x,u,'-b')
+
+plt.title('Linear advection {} scheme, N={}, t={}'.format(scheme,N,tOut))
+plt.show()
+###W08_ex2_partb_switch_md
+* Stair-casing is clearly observed on the discontinuities.  This is caused by the averaging of $u^n_{i+1}$ and $u^n_{i-1}$ in the scheme.
+###W08_ex2_partb_end
+
+###W08_ex3_parta_start_py
+# Write the Lax-Wendroff scheme
+def LaxWendroff(u,dx,dt):
+    '''Classical, 2nd order, Lax-Wendroff scheme'''
+    u = u - AdvectionSpeed*dt/(2*dx) * (np.roll(u,+1)-np.roll(u,-1)) + \
+        (AdvectionSpeed**2)*(dt**2)/(2*dx**2) * (np.roll(u,+1)-2*u+np.roll(u,-1))
+    return u, 'Lax-Wendroff'
+
+'''Main Program'''
+# set up the grid and the initial conditions
+N = 500 # Number of grid points 
+dx, x = GridGen(N)
+u = InitialConditions(x)
+u0 = u.copy()
+
+# call the solver for 1 second using the Lax-Wendroff scheme
+tOut = 10.0    # Change this variable to obtain results for t = 10.0 and t = 50.0 seconds
+u, scheme = OneDSolver(tOut, u, dx, LaxWendroff)
+
+# Plot the results
+fig = plt.figure()
+
+# Plot exact solution
+plt.plot(x,u0,'-r')
+
+# Plot numerical solution
+plt.plot(x,u,'-b')
+
+plt.title('Linear advection {} scheme, N={}, t={}'.format(scheme,N,tOut))
+plt.show()
+###W08_ex3_parta_switch_md
+* at $t=1.0$ the waves are superimposed in the correct position, the sides of the square wave are sharp and well resolved, but Gibbs oscillations can be observed to the right of each discontinuity.
+* at $t=10.0$ the Gibbs oscillations are of similar amplitude to those at $t=1$, however they are spread out a little more due to dispersion of these waves. 
+* By $t=50.0$ The phase error in the Gaussian wave is  about 0.1m (20% of the wave length), a similar phase error is seen in the Square wave.  The Gaussian wave has not lost amplitude.  The Square wave has now lost it's shape, but not amplitude and the Gibbs oscillations are being significantly dispersed, almost reaching the Gaussian wave. 
+###W08_ex3_parta_end
+
+###W08_ex4_parta_start_py
+# Write the MacCormack scheme
+def MacCormack(u,dx,dt):
+    ''' 2nd order MacCormack predictor corrector method which is
+    equivalent to the classical Lax-Wendroff scheme.'''
+
+    # Predictor
+    up = u - AdvectionSpeed*dt/dx * (u - np.roll(u,-1)) 
+    # Corrector
+    u = (u+up)/2 - \
+      AdvectionSpeed*dt/(2*dx) * (np.roll(up,+1)-up)
+
+    return u, 'MacCormack'   
+
+'''Main Program'''
+# set up the grid and the initial conditions
+N = 500 # Number of grid points 
+dx, x = GridGen(N)
+u = InitialConditions(x)
+u0 = u.copy()
+
+# call the solver for 1 second using the MacCormack scheme
+tOut = 10.0    # Change this variable to obtain results for t = 10.0 and t = 50.0 seconds
+u, scheme = OneDSolver(tOut, u, dx, MacCormack)
+
+# Plot the results
+fig = plt.figure()
+
+# Plot exact solution
+plt.plot(x,u0,'-r')
+
+# Plot numerical solution
+plt.plot(x,u,'-b')
+
+plt.title('Linear advection {} scheme, N={}, t={}'.format(scheme,N,tOut))
+plt.show()   
+###W08_ex4_parta_switch_md
+The Lax-Wendroff and MacCormack solutions are identical as expected.
+###W08_ex4_parta_end
+
+
+###W08_ex4_partb_start_md
+We can see that for a = -1 the Gibbs oscillations occur just behind the left- or right- travelling discontinuity and that there is phase error again.
+###W08_ex4_partb_end
+
+
+
+
+
+
