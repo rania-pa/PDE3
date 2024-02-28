@@ -117,7 +117,7 @@ A, b = assemble_matrix(mesh)
 
 # Produce the spy plot of the A matrix
 
-plt.spy(A_mat, markersize=2, aspect='equal')
+plt.spy(A, markersize=2, aspect='equal')
 plt.show()
 
 
@@ -169,8 +169,8 @@ def unpack(grid, x):
 mesh = Grid(31,31)
 mesh.set_extent(0.2,0.2)
 mesh.generate()
-mesh.u[:,-1] = 250*mesh.x[:,-1]
-mesh.u[-1,:] = 250*mesh.y[-1,:]
+mesh.u[:,-1] = 250*mesh.y[:,-1]
+mesh.u[-1,:] = 250*mesh.x[-1,:]
 
 A, b = assemble_matrix(mesh)
 
@@ -201,8 +201,8 @@ for grid_index in range(5,0,-1):
     test = Grid(ni,nj)
     test.set_extent(0.2,0.2)
     test.generate()
-    test.u[:,-1] = 250*test.x[:,-1]
-    test.u[-1,:,] = 250*test.y[-1,:]
+    test.u[:,-1] = 250*test.y[:,-1]
+    test.u[-1,,] = 250*test.x[-1,:]
     print(test)
 
     # solve the system
