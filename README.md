@@ -30,4 +30,4 @@ The laboratory folder also contains a folder of scripts and another of figures. 
 The coursework folder (when becomes available) will contain Jupyter notebooks needed for the coursework assignments. 
 
 ## Useful
-This folder contains useful material to help in understanding some of the concepts of the numerical schemes better.
+This folder contains useful material (pdf saved notebooks) to help in understanding some of the concepts of the numerical schemes better.
